@@ -1762,16 +1762,33 @@
 </footer>
 
 <script>
-  var LEAD_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/zevashelanu@gmail.com';
+  var LEAD_EMAIL = 'zevashelanu@gmail.com';
+  var LEAD_AJAX_ENDPOINT = 'https://formsubmit.co/ajax/' + LEAD_EMAIL;
+  var LEAD_FORM_ENDPOINT = 'https://formsubmit.co/' + LEAD_EMAIL;
+
+  // גיבוי: שליחה רגילה (לא AJAX) ל-FormSubmit. עובדת גם כשה-AJAX נחסם
+  // (CORS, חוסם פרסומות, דפדפן ישן) ומעבירה לדף התודה דרך _next.
+  function nativeLeadSubmit(fields, nextUrl){
+    var f = document.createElement('form');
+    f.method = 'POST';
+    f.action = LEAD_FORM_ENDPOINT;
+    f.acceptCharset = 'UTF-8';
+    f.style.display = 'none';
+    fields._next = nextUrl;
+    fields._captcha = 'false';
+    Object.keys(fields).forEach(function(k){
+      var i = document.createElement('input');
+      i.type = 'hidden'; i.name = k; i.value = fields[k];
+      f.appendChild(i);
+    });
+    document.body.appendChild(f);
+    f.submit();
+  }
 
   function handleLeadForm(formId, nameId, phoneId, source){
     var form = document.getElementById(formId);
+    if(!form) return;
     var btn = form.querySelector('button[type=submit]');
-    var errBox = document.createElement('div');
-    errBox.className = 'form-err';
-    errBox.setAttribute('role', 'alert');
-    errBox.innerHTML = 'אופס, השליחה לא עברה 🙁 לחצו על כפתור הוואטסאפ או התקשרו <a href="tel:0537479284" style="font-weight:700;color:inherit">053-7479284</a>';
-    btn.parentNode.insertBefore(errBox, btn.nextSibling);
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -1779,44 +1796,44 @@
       var name = document.getElementById(nameId).value.trim();
       var phone = document.getElementById(phoneId).value.trim();
       btn.disabled = true;
-      errBox.style.display = 'none';
 
-      var url = 'thank-you.html';
       var params = [];
       if(name) params.push('name=' + encodeURIComponent(name));
       if(phone) params.push('phone=' + encodeURIComponent(phone));
-      if(params.length) url += '?' + params.join('&');
+      var nextUrl = new URL('thank-you.html' + (params.length ? '?' + params.join('&') : ''), window.location.href).href;
+
+      var fields = {
+        'שם': name,
+        'טלפון': phone,
+        'טופס': source,
+        'עמוד': window.location.href,
+        _subject: 'ליד חדש מהאתר – ' + name + ' ' + phone,
+        _template: 'table'
+      };
 
       var finished = false;
-      function fail(){
-        if(finished) return; finished = true;
-        btn.disabled = false;
-        errBox.style.display = 'block';
-      }
       function ok(){
         if(finished) return; finished = true;
-        window.location.href = url;
+        window.location.href = nextUrl;
       }
-      var timer = setTimeout(fail, 12000);
+      function fallback(){
+        if(finished) return; finished = true;
+        nativeLeadSubmit(fields, nextUrl);
+      }
+      var timer = setTimeout(fallback, 8000);
 
-      fetch(LEAD_EMAIL_ENDPOINT, {
+      fetch(LEAD_AJAX_ENDPOINT, {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify({
-          'שם': name,
-          'טלפון': phone,
-          'טופס': source,
-          'עמוד': window.location.href,
-          _subject: 'ליד חדש מהאתר – ' + name + ' ' + phone,
-          _template: 'table'
-        })
+        body: JSON.stringify(fields)
       })
       .then(function(r){ return r.json(); })
       .then(function(res){
         clearTimeout(timer);
-        if(res && String(res.success) === 'true'){ ok(); } else { fail(); }
+        if(res && String(res.success) === 'true'){ ok(); }
+        else { if(window.console) console.warn('FormSubmit:', res && res.message); fallback(); }
       })
-      .catch(function(){ clearTimeout(timer); fail(); });
+      .catch(function(err){ clearTimeout(timer); if(window.console) console.warn('FormSubmit fetch error:', err); fallback(); });
     });
   }
 
