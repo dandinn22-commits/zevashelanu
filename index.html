@@ -1762,78 +1762,22 @@
 </footer>
 
 <script>
-  var LEAD_EMAIL = 'zevashelanu@gmail.com';
-  var LEAD_AJAX_ENDPOINT = 'https://formsubmit.co/ajax/' + LEAD_EMAIL;
-  var LEAD_FORM_ENDPOINT = 'https://formsubmit.co/' + LEAD_EMAIL;
-
-  // גיבוי: שליחה רגילה (לא AJAX) ל-FormSubmit. עובדת גם כשה-AJAX נחסם
-  // (CORS, חוסם פרסומות, דפדפן ישן) ומעבירה לדף התודה דרך _next.
-  function nativeLeadSubmit(fields, nextUrl){
-    var f = document.createElement('form');
-    f.method = 'POST';
-    f.action = LEAD_FORM_ENDPOINT;
-    f.acceptCharset = 'UTF-8';
-    f.style.display = 'none';
-    fields._next = nextUrl;
-    fields._captcha = 'false';
-    Object.keys(fields).forEach(function(k){
-      var i = document.createElement('input');
-      i.type = 'hidden'; i.name = k; i.value = fields[k];
-      f.appendChild(i);
-    });
-    document.body.appendChild(f);
-    f.submit();
-  }
+  // ===== שליחת לידים: פותח וואטסאפ עם הפרטים ומעביר לדף תודה =====
+  var WA_NUMBER = '972537479284';
 
   function handleLeadForm(formId, nameId, phoneId, source){
     var form = document.getElementById(formId);
     if(!form) return;
-    var btn = form.querySelector('button[type=submit]');
-
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      if(btn.disabled) return;
       var name = document.getElementById(nameId).value.trim();
       var phone = document.getElementById(phoneId).value.trim();
-      btn.disabled = true;
-
-      var params = [];
-      if(name) params.push('name=' + encodeURIComponent(name));
-      if(phone) params.push('phone=' + encodeURIComponent(phone));
-      var nextUrl = new URL('thank-you.html' + (params.length ? '?' + params.join('&') : ''), window.location.href).href;
-
-      var fields = {
-        'שם': name,
-        'טלפון': phone,
-        'טופס': source,
-        'עמוד': window.location.href,
-        _subject: 'ליד חדש מהאתר – ' + name + ' ' + phone,
-        _template: 'table'
-      };
-
-      var finished = false;
-      function ok(){
-        if(finished) return; finished = true;
-        window.location.href = nextUrl;
-      }
-      function fallback(){
-        if(finished) return; finished = true;
-        nativeLeadSubmit(fields, nextUrl);
-      }
-      var timer = setTimeout(fallback, 8000);
-
-      fetch(LEAD_AJAX_ENDPOINT, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify(fields)
-      })
-      .then(function(r){ return r.json(); })
-      .then(function(res){
-        clearTimeout(timer);
-        if(res && String(res.success) === 'true'){ ok(); }
-        else { if(window.console) console.warn('FormSubmit:', res && res.message); fallback(); }
-      })
-      .catch(function(err){ clearTimeout(timer); if(window.console) console.warn('FormSubmit fetch error:', err); fallback(); });
+      var text = 'היי, אשמח לקבל הצעת מחיר לצביעה 🎨\nשם: ' + name + '\nטלפון: ' + phone;
+      var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text);
+      var thankUrl = 'thank-you.html?name=' + encodeURIComponent(name) + '&phone=' + encodeURIComponent(phone);
+      var win = window.open(waUrl, '_blank');
+      if(win){ window.location.href = thankUrl; }
+      else { window.location.href = waUrl; }
     });
   }
 
