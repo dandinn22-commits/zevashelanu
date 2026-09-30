@@ -1762,22 +1762,39 @@
 </footer>
 
 <script>
-  // ===== שליחת לידים: פותח וואטסאפ עם הפרטים ומעביר לדף תודה =====
-  var WA_NUMBER = '972537479284';
+  // ===== שליחת לידים: נשלח למייל ברקע ומעביר לדף תודה =====
+  var LEAD_ENDPOINT = 'https://formsubmit.co/ajax/zevashelanu@gmail.com';
 
   function handleLeadForm(formId, nameId, phoneId, source){
     var form = document.getElementById(formId);
     if(!form) return;
+    var btn = form.querySelector('button[type=submit]');
     form.addEventListener('submit', function(e){
       e.preventDefault();
+      if(btn.disabled) return;
+      btn.disabled = true;
       var name = document.getElementById(nameId).value.trim();
       var phone = document.getElementById(phoneId).value.trim();
-      var text = 'היי, אשמח לקבל הצעת מחיר לצביעה 🎨\nשם: ' + name + '\nטלפון: ' + phone;
-      var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text);
       var thankUrl = 'thank-you.html?name=' + encodeURIComponent(name) + '&phone=' + encodeURIComponent(phone);
-      var win = window.open(waUrl, '_blank');
-      if(win){ window.location.href = thankUrl; }
-      else { window.location.href = waUrl; }
+
+      var done = false;
+      function go(){ if(done) return; done = true; window.location.href = thankUrl; }
+      setTimeout(go, 2500); // לא מחכים יותר מ-2.5 שניות
+
+      try {
+        fetch(LEAD_ENDPOINT, {
+          method: 'POST',
+          keepalive: true,
+          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+          body: JSON.stringify({
+            'שם': name,
+            'טלפון': phone,
+            'טופס': source,
+            _subject: 'ליד חדש מהאתר – ' + name + ' ' + phone,
+            _template: 'table'
+          })
+        }).then(go, go);
+      } catch(err) { go(); }
     });
   }
 
