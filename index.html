@@ -1763,7 +1763,7 @@
 
 <script>
   // ===== שליחת לידים: נשלח למייל ברקע ומעביר לדף תודה =====
-  var LEAD_ENDPOINT = 'https://formsubmit.co/ajax/zevashelanu@gmail.com';
+  var LEAD_ENDPOINT = 'https://formsubmit.co/ajax/dandinn22@gmail.com';
 
   function handleLeadForm(formId, nameId, phoneId, source){
     var form = document.getElementById(formId);
@@ -1791,7 +1791,8 @@
             'טלפון': phone,
             'טופס': source,
             _subject: 'ליד חדש מהאתר – ' + name + ' ' + phone,
-            _template: 'table'
+            _template: 'table',
+            _cc: 'zevashelanu@gmail.com'
           })
         }).then(go, go);
       } catch(err) { go(); }
