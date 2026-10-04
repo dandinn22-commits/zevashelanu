@@ -4,6 +4,8 @@
 (function(){
   var ADS_ID = 'AW-18477957669';
   var GA4_ID = '';            // מזהה גוגל אנליטיקס, מתחיל ב-G-  (אם ריק – לא נשלח)
+  // רישום לחיצות על טלפון/ווטסאפ בלשונית "לחיצות" בגיליון הלידים
+  var CLICK_LOG = 'https://script.google.com/macros/s/AKfycbxYadrzoTl5-m09Drh5Sde9bn9PvF9XZEUj7eMg0Hu7DuIWu8zgscLTeIplfRwGKQEvOA/exec';
   var LABELS = {
     form:     '',             // שליחת טופס (נמדד בדף התודה)
     call:     '',             // לחיצה על מספר הטלפון
@@ -25,12 +27,25 @@
     } catch(e) {}
   };
 
+  function logClick(kind){
+    if (!CLICK_LOG) return;
+    try {
+      var data = new URLSearchParams({ type: 'click', kind: kind, page: location.pathname });
+      if (navigator.sendBeacon) navigator.sendBeacon(CLICK_LOG, data);
+      else fetch(CLICK_LOG, { method: 'POST', mode: 'no-cors', keepalive: true, body: data });
+    } catch(e) {}
+  }
+
   // לחיצות על טלפון ווטסאפ בכל מקום באתר
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('a') : null;
     if (!a) return;
     var href = a.getAttribute('href') || '';
-    if (href.indexOf('tel:') === 0) trackConversion('call');
-    else if (href.indexOf('wa.me') > -1 || href.indexOf('api.whatsapp.com') > -1) trackConversion('whatsapp');
+    var kind = '';
+    if (href.indexOf('tel:') === 0) kind = 'call';
+    else if (href.indexOf('wa.me') > -1 || href.indexOf('api.whatsapp.com') > -1) kind = 'whatsapp';
+    if (!kind) return;
+    trackConversion(kind);
+    logClick(kind);
   }, true);
 })();
