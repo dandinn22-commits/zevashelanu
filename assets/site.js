@@ -1,23 +1,82 @@
 // ===== שליחת לידים: נשלח למייל ברקע ומעביר לדף תודה =====
   var LEAD_ENDPOINT = 'https://formsubmit.co/ajax/dandinn22@gmail.com';
+  // אופציונלי: כתובת גיבוי ללידים (למשל גיליון של גוגל). אם ריק – לא בשימוש
+  var BACKUP_ENDPOINT = '';
+  var WA_NUMBER = '972537479284';
+
+  // מחזיר מספר ישראלי תקין בפורמט 05XXXXXXXX, או מחרוזת ריקה
+  function normalizePhone(raw){
+    var d = String(raw || '').replace(/[^\d+]/g, '');
+    if (d.indexOf('+972') === 0) d = '0' + d.slice(4);
+    else if (d.indexOf('972') === 0 && d.length >= 11) d = '0' + d.slice(3);
+    d = d.replace(/\D/g, '');
+    if (d.length === 9 && d.charAt(0) !== '0') d = '0' + d;
+    return /^0(?:5\d{8}|7\d{8}|[23489]\d{7})$/.test(d) ? d : '';
+  }
 
   function handleLeadForm(formId, nameId, phoneId, source){
     var form = document.getElementById(formId);
     if(!form) return;
     var btn = form.querySelector('button[type=submit]');
+    var nameEl = document.getElementById(nameId);
+    var phoneEl = document.getElementById(phoneId);
+    var hp = form.querySelector('input[name="_honey"]');
+    var errBox = form.querySelector('.form-error');
+    var phoneErr = document.getElementById(phoneId + 'Err');
+
+    function showPhoneErr(on){
+      if (phoneErr) phoneErr.hidden = !on;
+      phoneEl.setAttribute('aria-invalid', on ? 'true' : 'false');
+    }
+    phoneEl.addEventListener('input', function(){
+      if (phoneErr && !phoneErr.hidden && normalizePhone(phoneEl.value)) showPhoneErr(false);
+    });
+
     form.addEventListener('submit', function(e){
       e.preventDefault();
       if(btn.disabled) return;
-      btn.disabled = true;
-      var name = document.getElementById(nameId).value.trim();
-      var phone = document.getElementById(phoneId).value.trim();
-      var thankUrl = '/thank-you.html';
-      // לא מעבירים פרטים אישיים בכתובת – רק בזיכרון הזמני של הדפדפן
-      try { sessionStorage.setItem('lead_name', name); sessionStorage.setItem('lead_sent', '1'); } catch(err) {}
+      if (errBox) errBox.hidden = true;
 
-      var done = false;
-      function go(){ if(done) return; done = true; window.location.href = thankUrl; }
-      setTimeout(go, 4000);
+      var name = nameEl.value.trim();
+      var phone = normalizePhone(phoneEl.value);
+      if(!phone){ showPhoneErr(true); phoneEl.focus(); return; }
+      showPhoneErr(false);
+
+      // שדה נסתר שרק רובוטים ממלאים: לא שולחים ולא סופרים המרה
+      if (hp && hp.value){ window.location.href = '/thank-you.html'; return; }
+
+      btn.disabled = true;
+      btn.classList.add('is-sending');
+      var finished = false;
+
+      function success(){
+        if(finished) return; finished = true;
+        // לא מעבירים פרטים אישיים בכתובת – רק בזיכרון הזמני של הדפדפן
+        try {
+          sessionStorage.setItem('lead_name', name);
+          sessionStorage.setItem('lead_phone', phone);
+          sessionStorage.setItem('lead_sent', '1');
+        } catch(err) {}
+        window.location.href = '/thank-you.html';
+      }
+      function failure(){
+        if(finished) return; finished = true;
+        btn.disabled = false;
+        btn.classList.remove('is-sending');
+        if (!errBox) return;
+        var msg = 'היי, אני ' + name + ' (' + phone + '). אשמח לקבל הצעת מחיר לצביעה';
+        errBox.innerHTML = 'השליחה לא עברה. אפשר <a href="https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg) +
+          '" target="_blank" rel="noopener">לשלוח לנו את הפרטים בווטסאפ</a> או להתקשר ל־<a href="tel:0537479284" dir="ltr">053-747-9284</a>.';
+        errBox.hidden = false;
+      }
+      var timer = setTimeout(failure, 12000);
+
+      if (BACKUP_ENDPOINT) {
+        try {
+          fetch(BACKUP_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true,
+            body: new URLSearchParams({ name: name, phone: phone, source: source, page: location.pathname }) });
+        } catch(err) {}
+      }
 
       // form-urlencoded = בקשה "פשוטה" בלי preflight, ולכן keepalive עובד בכל הדפדפנים
       var body = new URLSearchParams({
@@ -27,25 +86,31 @@
         'עמוד': location.pathname,
         _subject: 'ליד חדש מהאתר – ' + name + ' ' + phone,
         _template: 'table',
-        _cc: 'zevashelanu@gmail.com'
+        _cc: 'zevashelanu@gmail.com',
+        _honey: ''
       });
       try {
         fetch(LEAD_ENDPOINT, { method: 'POST', keepalive: true, headers: {'Accept': 'application/json'}, body: body })
           .then(function(r){ return r.json(); })
-          .then(function(res){ if(window.console) console.log('FormSubmit:', res); go(); }, go);
-      } catch(err) { go(); }
+          .then(function(res){
+            clearTimeout(timer);
+            if (res && (res.success === true || res.success === 'true')) success(); else failure();
+          }, function(){ clearTimeout(timer); failure(); });
+      } catch(err) { clearTimeout(timer); failure(); }
     });
   }
 
   handleLeadForm('quoteForm', 'name', 'phone', 'טופס עליון');
   handleLeadForm('contactForm', 'cName', 'cPhone', 'טופס תחתון');
 
-  document.getElementById('callFloatClose').addEventListener('click', function(){
+  var callFloatClose = document.getElementById('callFloatClose');
+  if (callFloatClose) callFloatClose.addEventListener('click', function(){
     document.getElementById('callFloat').classList.add('hidden');
   });
 
   function initCarousel(opts){
     var track = document.getElementById(opts.track);
+    if (!track) return;
     var cards = track.children;
     var total = cards.length;
     var prevBtn = document.getElementById(opts.prev);

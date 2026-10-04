@@ -13,7 +13,7 @@
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function(){ dataLayer.push(arguments); };
   gtag('js', new Date());
-  gtag('config', ADS_ID);
+  gtag('config', ADS_ID, { allow_enhanced_conversions: true });
   if (GA4_ID) gtag('config', GA4_ID);
 
   var GA4_EVENTS = { form: 'generate_lead', call: 'click_call', whatsapp: 'click_whatsapp' };

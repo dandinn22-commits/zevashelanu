@@ -277,7 +277,11 @@
       name = sessionStorage.getItem('lead_name') || '';
       // המרה נספרת רק אחרי שליחת טופס אמיתית, ופעם אחת בלבד (לא ברענון הדף)
       if (sessionStorage.getItem('lead_sent')) {
+        var phone = sessionStorage.getItem('lead_phone') || '';
         sessionStorage.removeItem('lead_sent');
+        sessionStorage.removeItem('lead_phone');
+        // המרות משופרות: גוגל מצפין את המספר לפני השימוש בו
+        if (phone && window.gtag) gtag('set', 'user_data', { phone_number: '+972' + phone.replace(/^0/, '') });
         if (window.trackConversion) trackConversion('form');
       }
     } catch(e) {}
