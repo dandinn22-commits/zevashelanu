@@ -4,8 +4,8 @@
 (function(){
   var ADS_ID = 'AW-18477957669';
   var GA4_ID = '';            // מזהה גוגל אנליטיקס, מתחיל ב-G-  (אם ריק – לא נשלח)
-  // רישום לחיצות על טלפון/ווטסאפ בלשונית "לחיצות" בגיליון הלידים
-  var CLICK_LOG = 'https://script.google.com/macros/s/AKfycbxYadrzoTl5-m09Drh5Sde9bn9PvF9XZEUj7eMg0Hu7DuIWu8zgscLTeIplfRwGKQEvOA/exec';
+  // רישום לחיצות על טלפון/ווטסאפ בלשונית "לחיצות" בגיליון "לידים - הצבע שלנו"
+  var CLICK_LOG = 'https://script.google.com/macros/s/AKfycbyaK3u9JmNjgzM_41AvY8_ECwkq9Ve7_uUu-V_mmV48PewsWlR-0urMT6gu7q3XicxS5w/exec';
   var LABELS = {
     form:     '',             // שליחת טופס (נמדד בדף התודה)
     call:     '',             // לחיצה על מספר הטלפון
@@ -45,7 +45,8 @@
     if (href.indexOf('tel:') === 0) kind = 'call';
     else if (href.indexOf('wa.me') > -1 || href.indexOf('api.whatsapp.com') > -1) kind = 'whatsapp';
     if (!kind) return;
-    trackConversion(kind);
+    // בדף התודה הליד כבר נספר – לא סופרים המרה נוספת, רק רושמים בגיליון
+    if (location.pathname.indexOf('thank-you') === -1) trackConversion(kind);
     logClick(kind);
   }, true);
 })();
