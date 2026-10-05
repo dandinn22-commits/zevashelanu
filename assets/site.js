@@ -1,7 +1,7 @@
 // ===== שליחת לידים: נשלח למייל ברקע ומעביר לדף תודה =====
   var LEAD_ENDPOINT = 'https://formsubmit.co/ajax/dandinn22@gmail.com';
-  // אופציונלי: כתובת גיבוי ללידים (למשל גיליון של גוגל). אם ריק – לא בשימוש
-  var BACKUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxYadrzoTl5-m09Drh5Sde9bn9PvF9XZEUj7eMg0Hu7DuIWu8zgscLTeIplfRwGKQEvOA/exec';
+  // גיבוי לידים לגיליון "לידים - הצבע שלנו" בגוגל דרייב
+  var BACKUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyaK3u9JmNjgzM_41AvY8_ECwkq9Ve7_uUu-V_mmV48PewsWlR-0urMT6gu7q3XicxS5w/exec';
   var WA_NUMBER = '972537479284';
 
   // מחזיר מספר ישראלי תקין בפורמט 05XXXXXXXX, או מחרוזת ריקה
