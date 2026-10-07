@@ -7,8 +7,8 @@
   // רישום לחיצות על טלפון/ווטסאפ בלשונית "לחיצות" בגיליון "לידים - הצבע שלנו"
   var CLICK_LOG = 'https://script.google.com/macros/s/AKfycbyaK3u9JmNjgzM_41AvY8_ECwkq9Ve7_uUu-V_mmV48PewsWlR-0urMT6gu7q3XicxS5w/exec';
   var LABELS = {
-    form:     '',             // שליחת טופס (נמדד בדף התודה)
-    call:     '',             // לחיצה על מספר הטלפון
+    form:     '-uzZCMiJl5MdEKWE_epE', // שליחת טופס (נמדד בדף התודה)
+    call:     'XSQECNHbtZQdEKWE_epE', // לחיצה על מספר הטלפון
     whatsapp: ''              // לחיצה על ווטסאפ
   };
 
