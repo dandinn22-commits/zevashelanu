@@ -9,7 +9,7 @@
   var LABELS = {
     form:     '-uzZCMiJl5MdEKWE_epE', // שליחת טופס (נמדד בדף התודה)
     call:     'XSQECNHbtZQdEKWE_epE', // לחיצה על מספר הטלפון
-    whatsapp: ''              // לחיצה על ווטסאפ
+    whatsapp: '03htCLzkxZQdEKWE_epE'  // לחיצה על ווטסאפ
   };
 
   window.dataLayer = window.dataLayer || [];
