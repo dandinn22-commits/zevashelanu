@@ -18,6 +18,12 @@
   gtag('config', ADS_ID, { allow_enhanced_conversions: true });
   if (GA4_ID) gtag('config', GA4_ID);
 
+  // זיהוי מבקר שהגיע ממודעה בגוגל אדס (נשמר לכל הביקור, גם במעבר בין עמודים)
+  try {
+    if (/[?&](gclid|gbraid|wbraid)=|[?&]utm_medium=cpc/.test(location.search)) sessionStorage.setItem('from_ads', '1');
+    window.fromAds = sessionStorage.getItem('from_ads') === '1';
+  } catch(e) { window.fromAds = false; }
+
   var GA4_EVENTS = { form: 'generate_lead', call: 'click_call', whatsapp: 'click_whatsapp' };
 
   window.trackConversion = function(kind){
@@ -30,7 +36,7 @@
   function logClick(kind){
     if (!CLICK_LOG) return;
     try {
-      var data = new URLSearchParams({ type: 'click', kind: kind, page: location.pathname });
+      var data = new URLSearchParams({ type: 'click', kind: kind, page: location.pathname + (window.fromAds ? ' – גוגל אדס' : '') });
       if (navigator.sendBeacon) navigator.sendBeacon(CLICK_LOG, data);
       else fetch(CLICK_LOG, { method: 'POST', mode: 'no-cors', keepalive: true, body: data });
     } catch(e) {}

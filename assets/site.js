@@ -74,7 +74,7 @@
       if (BACKUP_ENDPOINT) {
         try {
           fetch(BACKUP_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true,
-            body: new URLSearchParams({ name: name, phone: phone, source: source, page: location.pathname }) });
+            body: new URLSearchParams({ name: name, phone: phone, source: source + (window.fromAds ? ' – גוגל אדס' : ''), page: location.pathname }) });
         } catch(err) {}
       }
 
@@ -83,6 +83,7 @@
         'שם': name,
         'טלפון': phone,
         'טופס': source,
+        'מקור': window.fromAds ? 'גוגל אדס' : 'אתר / חיפוש רגיל',
         'עמוד': location.pathname,
         _subject: 'ליד חדש מהאתר – ' + name + ' ' + phone,
         _template: 'table',
