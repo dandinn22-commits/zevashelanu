@@ -1354,3 +1354,17 @@ img.work-photo{display:block;}
 .article-meta{font-size:14px;color:var(--ink-soft);}
 .faq-more{text-align:center;margin-top:22px;font-weight:600;}
 .faq-more a{color:var(--yellow-deep);font-weight:800;}
+
+/* עמודי ערים: מה אנחנו פוגשים בעיר */
+.local-text h3{margin:28px 0 12px;font-size:20px;font-weight:800;color:var(--ink);}
+.local-seen{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:12px;}
+.local-seen li{background:var(--cream);border-radius:10px;padding:12px 16px;}
+.local-seen strong{display:block;color:var(--ink);margin-bottom:2px;}
+.article > .article-wrap > ol{padding-right:22px;margin-bottom:14px;}
+.article-related{margin-top:34px;padding:18px 20px;background:var(--cream);border-radius:12px;}
+.article-related p{font-family:'Rubik',sans-serif;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.article-related ul{margin:0;}
+.article-related a{color:var(--yellow-deep);font-weight:700;text-decoration:none;}
+.article-related a:hover{text-decoration:underline;}
+.article .faq-item{margin-bottom:10px;}
+.local-text a{color:var(--yellow-deep);font-weight:700;}
