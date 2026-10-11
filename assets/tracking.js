@@ -3,7 +3,7 @@
    תווית המרה = החלק שאחרי הלוכסן ב-send_to, למשל:  'AW-18477957669/AbCdEfGh12'  ->  'AbCdEfGh12'  */
 (function(){
   var ADS_ID = 'AW-18477957669';
-  var GA4_ID = '';            // מזהה גוגל אנליטיקס, מתחיל ב-G-  (אם ריק – לא נשלח)
+  var GA4_ID = 'G-NXC4DYHVZG';            // מזהה גוגל אנליטיקס, מתחיל ב-G-  (אם ריק – לא נשלח)
   // רישום לחיצות על טלפון/ווטסאפ בלשונית "לחיצות" בגיליון "לידים - הצבע שלנו"
   var CLICK_LOG = 'https://script.google.com/macros/s/AKfycbyaK3u9JmNjgzM_41AvY8_ECwkq9Ve7_uUu-V_mmV48PewsWlR-0urMT6gu7q3XicxS5w/exec';
   var LABELS = {
