@@ -1368,3 +1368,62 @@ img.work-photo{display:block;}
 .article-related a:hover{text-decoration:underline;}
 .article .faq-item{margin-bottom:10px;}
 .local-text a{color:var(--yellow-deep);font-weight:700;}
+
+/* ============ שיפור המרות בנייד (אוקטובר 2026) ============ */
+.form-trust{
+  list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;
+  margin:-10px 0 18px;font-size:13.5px;font-weight:700;color:var(--ink-soft);
+}
+.form-trust li::before{content:"✓ ";color:var(--yellow-dark);font-weight:900;}
+.works-cta{text-align:center;margin-top:26px;}
+#quoteForm,#contactForm{scroll-margin-top:16px;}
+.sticky-label{display:none;}
+.quote-sticky-btn{display:none !important;}
+
+@media (max-width:640px){
+  /* חלק עליון קצר יותר – הטופס עולה למסך הראשון */
+  .hero{min-height:auto;}
+  .hero-inner{padding:16px 16px 34px;}
+  .logo-wrap{width:84px;height:84px;margin:0 0 12px;box-shadow:0 6px 0 var(--yellow-dark),0 12px 20px rgba(20,24,26,0.4);}
+  .logo-wrap img{width:80px;height:80px;}
+  .eyebrow{font-size:12.5px;letter-spacing:0.02em;padding:6px 14px;margin-bottom:12px;text-align:center;}
+  .hero h1{font-size:30px;}
+  .hero h1 .stroke svg{bottom:-10px;height:16px;}
+  .hero-sub,.hero-cta-row,.scroll-cue,.call-float{display:none;}
+  .form-card{margin-top:26px;padding:24px 18px 20px;}
+  .form-title{font-size:21px;}
+  .form-note{margin-bottom:16px;}
+  .form-trust{font-size:13px;gap:4px 10px;margin:-6px 0 14px;}
+  .form-wa{margin-top:14px;}
+
+  /* מונע הגדלה אוטומטית של המסך באייפון בלחיצה על שדה */
+  .field input,.field select,.field textarea{font-size:16px;padding:13px 14px;}
+
+  /* פס פעולות קבוע בתחתית המסך */
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom));}
+  .sticky-actions{
+    left:0;right:0;bottom:0;gap:0;flex-direction:row;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+    background:rgba(253,246,234,0.97);
+    box-shadow:0 -6px 20px rgba(20,24,26,0.16);
+    animation:none;
+  }
+  .sticky-actions .sticky-btn{
+    flex:1;width:auto;height:48px;border-radius:12px;margin:0 4px;gap:7px;
+    font-family:'Rubik',sans-serif;font-weight:800;font-size:15px;box-shadow:none;
+  }
+  .sticky-actions .sticky-btn:hover{transform:none;}
+  .sticky-actions .sticky-btn svg{width:21px;height:21px;}
+  .sticky-label{display:inline;}
+  .whatsapp-btn{color:#fff;}
+  .call-sticky-btn{color:var(--yellow);border-width:0;}
+  .quote-sticky-btn{display:flex !important;background:var(--yellow);color:var(--ink);border:0;}
+
+  /* כפתור הנגישות מעל הפס */
+  .access-toggle{width:42px;height:42px;bottom:calc(76px + env(safe-area-inset-bottom));right:12px;}
+  .access-toggle svg{width:24px;height:24px;}
+  .access-panel{bottom:calc(126px + env(safe-area-inset-bottom));right:12px;}
+}
+@media (max-width:360px){
+  .sticky-actions .sticky-btn{font-size:13.5px;gap:5px;margin:0 3px;}
+}
