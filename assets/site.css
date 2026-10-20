@@ -1427,10 +1427,3 @@ img.work-photo{display:block;}
 @media (max-width:360px){
   .sticky-actions .sticky-btn{font-size:13.5px;gap:5px;margin:0 3px;}
 }
-
-/* ============ MOLDING WALLS (קרניזים) ============ */
-.works.molding{background:var(--cream);}
-.molding-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:980px;margin:0 auto;}
-.molding-item{position:relative;margin:0;border-radius:16px;overflow:hidden;aspect-ratio:4/3;border:1px solid var(--line);background:var(--white);}
-.molding-item img{display:block;width:100%;height:100%;object-fit:cover;}
-@media (max-width:640px){.molding-grid{grid-template-columns:1fr;}}
