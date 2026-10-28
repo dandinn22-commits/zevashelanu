@@ -1450,3 +1450,10 @@ body{padding-top:44px;}
 html{scroll-padding-top:52px;}
 .call-float{display:none !important;}
 @media (max-width:380px){.top-call-text{display:none;}}
+
+.extra-work{margin-top:34px;text-align:center;}
+.extra-work h3{font-family:'Rubik',sans-serif;font-size:21px;margin:0 0 6px;color:var(--ink);}
+.extra-work p{margin:0 0 16px;color:var(--ink-soft);font-size:15px;}
+.extra-work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:12px;}
+.extra-work-img{aspect-ratio:3/4;border-radius:14px;overflow:hidden;}
+@media (max-width:640px){.extra-work-grid{grid-template-columns:1fr 1fr;}.extra-work-img:last-child{grid-column:1/-1;aspect-ratio:4/3;}}
