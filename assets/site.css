@@ -1492,3 +1492,7 @@ html{scroll-padding-top:52px;}
 .lightbox img{max-width:100%;max-height:100%;border-radius:12px;}
 .lightbox-close{position:absolute;top:14px;left:14px;width:42px;height:42px;border-radius:50%;border:0;background:var(--yellow);color:var(--ink);font-size:18px;font-weight:800;cursor:pointer;}
 @media (max-width:640px){.gallery-pairs{grid-template-columns:1fr;}}
+.panel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:1000px;margin:0 auto;}
+.gal-item.wide{aspect-ratio:16/9;}
+.panel-grid .gal-item:first-child{grid-column:1/-1;}
+@media (max-width:640px){.panel-grid{grid-template-columns:1fr;gap:10px;}}
