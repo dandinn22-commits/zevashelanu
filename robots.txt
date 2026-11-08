@@ -2,4 +2,35 @@ User-agent: *
 Allow: /
 Disallow: /thank-you.html
 
+# סורקי בינה מלאכותית – מותר לסרוק את האתר
+User-agent: GPTBot
+Allow: /
+Disallow: /thank-you.html
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /thank-you.html
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /thank-you.html
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /thank-you.html
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /thank-you.html
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /thank-you.html
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: https://zevashelanu.com/sitemap.xml
